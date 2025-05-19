@@ -1,0 +1,64 @@
+@import url('https://fonts.googleapis.com/css2?family=Crimson+Text:ital,wght@0,400;0,600;0,700;1,400;1,600;1,700&family=Dancing+Script:wght@400..700&family=Italiana&family=Josefin+Slab:ital,wght@0,100..700;1,100..700&family=Jost:ital,wght@0,100..900;1,100..900&family=Lemonada:wght@300..700&family=Lobster&family=PT+Serif:ital,wght@0,400;0,700;1,400;1,700&family=Playwrite+AU+SA:wght@100..400&family=Playwrite+SK:wght@100..400&family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap');
+
+*{
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+body{
+    font-family:  "Italiana", sans-serif;
+    font-weight: 600;
+}
+header{
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background-color: white;
+    overflow: hidden;
+    height: 22vh;
+}
+.icons{
+    display: flex;
+    gap: 2rem;
+    margin-right: 5rem;
+}
+.menu{
+    display: flex;
+    gap: 2rem;
+    margin-left: 5rem;
+}
+.link-menu{
+    text-decoration: none;
+    color: black;
+    font-size: 0.8rem;
+    font-weight: 600;
+    letter-spacing: 0.2rem;
+}
+#logo{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+#img-logo{
+    width: 20rem;
+    height: 10rem;
+    margin-right: 8rem;
+}
+#capa{
+    background-image: url('../images/carrossel/img-capa.png');
+    background-size: cover;
+    background-position: center;    
+    height: 46vh;  
+    width: 100vw;
+}
+.text-capa{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    font-size: 2rem;
+    letter-spacing: 1rem;
+    color: white;
+    font-weight: 900;
+    height: 40vh;  
+}
