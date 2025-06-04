@@ -1,4 +1,25 @@
 // 🔁 Carrega os cards dos produtos
+function carregarColecao() {
+  const linkColecao = document.getElementById('link-colecao');
+
+  if (linkColecao) {
+    linkColecao.addEventListener('click', function (e) {
+      e.preventDefault();
+
+      fetch('http://localhost/velas_master/actions/cards_colecao.php')
+        .then(response => response.text())
+        .then(html => {
+          // Substitui o conteúdo da área com os cards
+          document.getElementById('area-produtos').innerHTML = html;
+        })
+        .catch(error => {
+          document.getElementById('area-produtos').innerHTML = '<p>Erro ao carregar os produtos.</p>';
+          console.error('Erro:', error);
+        });
+    });
+  }
+}
+
 function carregarVelas() {
   fetch('http://localhost/velas_master/actions/cards_produtos.php')
     .then(response => response.text())
@@ -122,11 +143,87 @@ function configurarBotaoVoltarFavoritos() {
   }
 }
 
+
+//Formulário de personalização
+function configurarFormularioPersonalizacao() {
+  const form = document.getElementById('form-personalizacao');
+  const mensagemDiv = document.getElementById('mensagem-sucesso');
+  const btnVoltar = document.getElementById('btn-voltar-produtos');
+
+  if (!form) return;
+
+  // Envio do formulário via AJAX
+  form.addEventListener('submit', function (e) {
+    e.preventDefault();
+
+    const formData = new FormData(form);
+
+    fetch('http://localhost/velas_master/actions/salvar_personalizacao.php', {
+      method: 'POST',
+      body: formData
+    })
+      .then(res => res.json())
+      .then(data => {
+        if (data.status === 'sucesso') {
+          mensagemDiv.textContent = data.mensagem;
+          mensagemDiv.style.color = 'green';
+          form.reset();
+        } else {
+          mensagemDiv.textContent = data.mensagem;
+          mensagemDiv.style.color = 'red';
+        }
+      })
+      .catch(err => {
+        mensagemDiv.textContent = 'Erro ao enviar o formulário.';
+        mensagemDiv.style.color = 'red';
+        console.error('Erro:', err);
+      });
+  });
+
+  // Botão voltar para os produtos
+  if (btnVoltar) {
+    btnVoltar.addEventListener('click', function () {
+      document.getElementById('area-login').innerHTML = '';
+      document.getElementById('area-venda-produtos').style.display = 'block';
+      carregarVelas();
+      carregarQuantidadeVelas();
+    });
+  }
+}
+
+function configurarLinkPersonalizacao() {
+  const link = document.getElementById('link-personalizacao');
+
+  if (!link) return;
+
+  link.addEventListener('click', function (e) {
+    e.preventDefault();
+
+    fetch('http://localhost/velas_master/pages/personalizacao.php')
+      .then(response => response.text())
+      .then(html => {
+        // Esconde os produtos e mostra a área de personalização
+        document.getElementById('area-login').innerHTML = html;
+        document.getElementById('area-venda-produtos').style.display = 'none';
+
+        // Ativa os eventos do formulário
+        setTimeout(configurarFormularioPersonalizacao, 100);
+      })
+      .catch(error => {
+        console.error('Erro ao carregar personalização:', error);
+      });
+  });
+}
+
+
 // 🚀 Quando o DOM estiver pronto, chama todas as funções
 document.addEventListener('DOMContentLoaded', function () {
-  carregarVelas();
   carregarQuantidadeVelas();
+  carregarColecao();
+  carregarVelas();
   configurarLogin();
   configurarFavoritos();
+  configurarFormularioPersonalizacao();
+  configurarLinkPersonalizacao();
 });
 
