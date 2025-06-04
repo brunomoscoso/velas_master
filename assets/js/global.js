@@ -215,6 +215,68 @@ function configurarLinkPersonalizacao() {
   });
 }
 
+//Cadastro de usuário
+function configurarCadastro() {
+  const formCadastro = document.getElementById('form-cadastro');
+  const mensagem = document.getElementById('mensagem-cadastro');
+
+  if (!formCadastro) return;
+
+  formCadastro.addEventListener('submit', function (e) {
+    e.preventDefault();
+
+    const formData = new FormData(formCadastro);
+
+    fetch('http://localhost/velas_master/actions/salvar_cadastro.php', {
+      method: 'POST',
+      body: formData
+    })
+      .then(res => res.text())
+      .then(texto => {
+        mensagem.innerText = texto;
+        mensagem.style.color = texto.includes('sucesso') ? 'green' : 'red';
+
+        if (texto.includes('sucesso')) {
+          formCadastro.reset(); // limpa o formulário
+        }
+      })
+      .catch(error => {
+        mensagem.innerText = 'Erro ao cadastrar.';
+        mensagem.style.color = 'red';
+        console.error('Erro:', error);
+      });
+  });
+}
+function configurarLinkCriarConta() {
+  document.addEventListener('click', function (e) {
+    if (e.target && e.target.id === 'link-cadastro') {
+      e.preventDefault();
+
+      fetch('http://localhost/velas_master/pages/area_cadastro.php')
+        .then(res => res.text())
+        .then(html => {
+          document.getElementById('area-login').innerHTML = html;
+          configurarCadastro();
+          configurarBotaoVoltarCadastro(); // ativa o envio do formulário de cadastro
+        })
+        .catch(error => {
+          console.error('Erro ao carregar cadastro:', error);
+        });
+    }
+  });
+}
+function configurarBotaoVoltarCadastro() {
+  const btnVoltar = document.getElementById('btn-voltar-produtos');
+  if (btnVoltar) {
+    btnVoltar.addEventListener('click', function () {
+      document.getElementById('area-login').innerHTML = '';
+      document.getElementById('area-venda-produtos').style.display = 'block';
+      carregarVelas();
+      carregarQuantidadeVelas();
+    });
+  }
+}
+
 
 // 🚀 Quando o DOM estiver pronto, chama todas as funções
 document.addEventListener('DOMContentLoaded', function () {
@@ -225,5 +287,8 @@ document.addEventListener('DOMContentLoaded', function () {
   configurarFavoritos();
   configurarFormularioPersonalizacao();
   configurarLinkPersonalizacao();
+  configurarCadastro();
+  configurarLinkCriarConta();
+  configurarBotaoVoltarCadastro();
 });
 

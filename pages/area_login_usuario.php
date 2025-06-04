@@ -9,6 +9,9 @@
 
     <button type="submit">Entrar</button>
     </form>
+    <p class="text-cadastro">Não tem uma conta? 
+    <a href="#" id="link-cadastro">Clique aqui para se cadastrar</a>
+    </p>
 
 <div class="col-12 text-start mb-3">
   <button id="btn-voltar-produtos">← Voltar para os Produtos</button>

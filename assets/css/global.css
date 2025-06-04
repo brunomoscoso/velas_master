@@ -256,3 +256,48 @@ header{
 .btn-favorito.favoritado {
   color: red;
 }
+.cadastro-container {
+    max-width: 400px;
+    margin: 50px auto;
+    padding: 30px;
+    background: #f8f8f8;
+    border-radius: 8px;
+    box-shadow: 0 0 10px #ccc;
+    font-family: Arial, sans-serif;
+  }
+
+  .cadastro-container h2 {
+    text-align: center;
+    margin-bottom: 20px;
+  }
+
+  .cadastro-container label {
+    display: block;
+    margin-bottom: 5px;
+    font-weight: bold;
+  }
+
+  .cadastro-container input {
+    width: 100%;
+    padding: 8px;
+    margin-bottom: 15px;
+    border: 1px solid #bbb;
+    border-radius: 4px;
+  }
+
+  .cadastro-container button {
+    width: 100%;
+    padding: 10px;
+    background: #333;
+    color: #fff;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+  }
+
+  .cadastro-container .voltar-btn {
+    margin-top: 15px;
+    background: transparent;
+    border: 1px solid #333;
+    color: #333;
+}
