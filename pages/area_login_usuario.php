@@ -11,6 +11,6 @@
     </form>
 
 <div class="col-12 text-start mb-3">
-  <button id="btn-voltar-produtos" class="btn btn-secondary">← Voltar para os Produtos</button>
+  <button id="btn-voltar-produtos">← Voltar para os Produtos</button>
 </div>
 </div>
