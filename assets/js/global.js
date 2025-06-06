@@ -20,17 +20,7 @@ function carregarColecao() {
   }
 }
 
-function carregarVelas() {
-  fetch('http://localhost/velas_master/actions/cards_produtos.php')
-    .then(response => response.text())
-    .then(html => {
-      document.getElementById('area-produtos').innerHTML = html;
-    })
-    .catch(error => {
-      document.getElementById('area-produtos').innerHTML = '<p>Erro ao carregar os produtos.</p>';
-      console.error('Erro:', error);
-    });
-}
+
 
 // 🔁 Carrega a quantidade de velas (coleções)
 function carregarQuantidadeVelas() {
@@ -41,6 +31,19 @@ function carregarQuantidadeVelas() {
     })
     .catch(error => {
       document.getElementById('area-qtd-velas').innerHTML = '<p>Erro ao carregar as coleções.</p>';
+      console.error('Erro:', error);
+    });
+}
+
+//Cards
+function carregarVelas() {
+  fetch('http://localhost/velas_master/actions/cards_produtos.php')
+    .then(response => response.text())
+    .then(html => {
+      document.getElementById('area-produtos').innerHTML = html;
+    })
+    .catch(error => {
+      document.getElementById('area-produtos').innerHTML = '<p>Erro ao carregar os produtos.</p>';
       console.error('Erro:', error);
     });
 }
@@ -277,6 +280,86 @@ function configurarBotaoVoltarCadastro() {
   }
 }
 
+//Carrinho de compras
+function adicionarAoCarrinho(produto_id) {
+  fetch('http://localhost/velas_master/actions/get_carrinho.php', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+    body: 'produto_id=' + produto_id
+  })
+  .then(response => response.json())
+  .then(data => {
+    if (data.status === 'ok') {
+      document.getElementById('contador-carrinho').textContent = data.total;
+    } else {
+      alert(data.mensagem);
+    }
+  })
+  .catch(error => console.error('Erro ao adicionar ao carrinho:', error));
+}
+function atualizarContadorCarrinho() {
+  fetch('http://localhost/velas_master/actions/contador_carrinho.php')
+    .then(res => res.text())
+    .then(contador => {
+      document.getElementById('contador-carrinho').textContent = contador;
+    });
+}
+function configurarLinksCarrinho() {
+  document.addEventListener('click', function (e) {
+    if (e.target.closest('.link-carrinho')) {
+      e.preventDefault();
+
+      fetch('http://localhost/velas_master/pages/carrinho.php')
+        .then(res => res.text())
+        .then(html => {
+          document.getElementById('area-carrinho').innerHTML = html;
+          document.getElementById('area-venda-produtos').style.display = 'none';
+          
+          // Ativa o botão de voltar
+          setTimeout(configurarBotaoVoltarCarrinho, 100);
+        })
+        .catch(error => {
+          document.getElementById('area-carrinho').innerHTML = '<p>Erro ao carregar o carrinho.</p>';
+          console.error('Erro:', error);
+        });
+    }
+  });
+}
+
+function configurarBotaoVoltarCarrinho() {
+  const btn = document.getElementById('btn-voltar-carrinho');
+  if (btn) {
+    btn.addEventListener('click', function () {
+      document.getElementById('area-carrinho').innerHTML = '';
+      document.getElementById('area-venda-produtos').style.display = 'block';
+    });
+  }
+}
+function removerDoCarrinho(produto_id) {
+  fetch('http://localhost/velas_master/actions/remover_item.php', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+    body: 'produto_id=' + produto_id
+  })
+  .then(res => res.json())
+  .then(data => {
+    if (data.status === 'ok') {
+      // Atualiza a tela do carrinho após remover
+      fetch('http://localhost/velas_master/pages/carrinho.php')
+        .then(res => res.text())
+        .then(html => {
+          document.getElementById('area-carrinho').innerHTML = html;
+          setTimeout(configurarBotaoVoltarCarrinho, 100);
+          atualizarContadorCarrinho();
+        });
+    } else {
+      alert(data.mensagem);
+    }
+  })
+  .catch(err => {
+    console.error('Erro ao remover item do carrinho:', err);
+  });
+}
 
 // 🚀 Quando o DOM estiver pronto, chama todas as funções
 document.addEventListener('DOMContentLoaded', function () {
@@ -289,6 +372,9 @@ document.addEventListener('DOMContentLoaded', function () {
   configurarLinkPersonalizacao();
   configurarCadastro();
   configurarLinkCriarConta();
+  configurarBotaoVoltarCadastro();
+  atualizarContadorCarrinho();
+  configurarLinksCarrinho()
   configurarBotaoVoltarCadastro();
 });
 

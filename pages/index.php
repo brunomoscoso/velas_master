@@ -42,7 +42,7 @@
         <div class="icons d-flex justify-content-end gap-3">
           <a href="#" class="img-icons" id="icon-login"><img src="../assets/images/icons/person_24dp_000000_FILL0_wght400_GRAD0_opsz24.png" alt=""></a>
           <a href="#" class="img-icons" id="icon-favorite"><img src="../assets/images/icons/favorite_24dp_000000_FILL0_wght400_GRAD0_opsz24.png" alt=""></a>
-          <a href="#" class="img-icons"><img src="../assets/images/icons/shopping_bag_24dp_000000_FILL0_wght400_GRAD0_opsz24.png" alt=""></a>
+          <a href="#" class="img-icons link-carrinho"><img src="../assets/images/icons/shopping_bag_24dp_000000_FILL0_wght400_GRAD0_opsz24.png" alt="">(<span id="contador-carrinho">0</span>)</a>
           <a href="#" class="img-icons"><img src="../assets/images/icons/search_24dp_000000_FILL0_wght400_GRAD0_opsz24.png" alt=""></a>
         </div>
       </div>
@@ -72,7 +72,7 @@
         <a class="nav-link" href="#">COLEÇÃO</a>
         <a class="nav-link" href="#">PERSONALIZAÇÃO</a>
         <a class="nav-link" href="#"><img src="../assets/images/icons/person_24dp_000000_FILL0_wght400_GRAD0_opsz24.png" alt=""> Conta</a>
-        <a class="nav-link" href="#"><img src="../assets/images/icons/shopping_bag_24dp_000000_FILL0_wght400_GRAD0_opsz24.png" alt=""> Sacola</a>
+        <a class="nav-link link-carrinho" href="#" ><img src="../assets/images/icons/shopping_bag_24dp_000000_FILL0_wght400_GRAD0_opsz24.png" alt="" > Sacola</a>
         <a class="nav-link" href="#"><img src="../assets/images/icons/search_24dp_000000_FILL0_wght400_GRAD0_opsz24.png" alt=""> Buscar</a>
         <hr>
       </div>
@@ -85,6 +85,7 @@
 </div>
 <div id="section-colecao"></div>
 <div id="area-login"></div>
+<div id="area-carrinho"></div>
 
 <section id="area-venda-produtos">
   <div class="container text-center">
@@ -122,7 +123,7 @@
   </div>
 </footer>
 
-<script src="../assets/js/global.js?v=1.5"></script>
+<script src="../assets/js/global.js?v=2.1"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.6/dist/js/bootstrap.bundle.min.js" crossorigin="anonymous"></script>
 </body>
 </html>
