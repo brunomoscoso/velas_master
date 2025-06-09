@@ -7,7 +7,7 @@
     <label for="senha">Senha</label>
     <input type="password" id="senha" name="senha" required>
 
-    <button type="submit">Entrar</button>
+    <button type="submit" class="link-area-usuario">Entrar</button>
     </form>
     <p class="text-cadastro">Não tem uma conta? 
     <a href="#" id="link-cadastro">Clique aqui para se cadastrar</a>

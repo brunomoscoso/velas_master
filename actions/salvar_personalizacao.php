@@ -1,56 +1,34 @@
 <?php
 session_start();
-require_once '../includes/conexao.php';
+require '../conexao.php';
 
-header('Content-Type: application/json');
-
-// Verifica se os campos obrigatórios foram enviados
-if (
-    empty($_POST['nome']) ||
-    empty($_POST['telefone']) ||
-    empty($_POST['endereco']) ||
-    empty($_POST['email']) ||
-    empty($_POST['data_entrega']) ||
-    empty($_POST['cor']) ||
-    empty($_POST['aroma'])
-) {
-    echo json_encode(['status' => 'erro', 'mensagem' => 'Todos os campos obrigatórios devem ser preenchidos.']);
-    exit;
-}
-
-$usuario_id = isset($_SESSION['user_id']) ? $_SESSION['user_id'] : null;
-
+// Coleta os dados do formulário
 $nome = $_POST['nome'];
+$email = $_POST['email'];
 $telefone = $_POST['telefone'];
 $endereco = $_POST['endereco'];
-$email = $_POST['email'];
-$data_entrega = $_POST['data_entrega'];
 $cor = $_POST['cor'];
 $aroma = $_POST['aroma'];
-$mensagem = isset($_POST['mensagem']) ? $_POST['mensagem'] : null;
+$data_entrega = $_POST['data_entrega'];
 
-$stmt = $conn->prepare("INSERT INTO personalizacoes 
-(usuario_id, nome_cliente, telefone, endereco, email, data_entrega, cor, aroma, mensagem)
-VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)");
+// Verifica se o usuário está logado
+$usuario_email = isset($_SESSION['user']) ? $_SESSION['user'] : null;
 
-$stmt->bind_param(
-    "issssssss",
-    $usuario_id,
-    $nome,
-    $telefone,
-    $endereco,
-    $email,
-    $data_entrega,
-    $cor,
-    $aroma,
-    $mensagem
-);
+// Apenas usuários logados podem ver depois
+$sql = "INSERT INTO personalizacoes (nome_cliente, email_cliente, telefone, endereco, cor, aroma, data_entrega, usuario_email)
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
 
-if ($stmt->execute()) {
-    echo json_encode(['status' => 'sucesso', 'mensagem' => 'Personalização registrada com sucesso!']);
+$stmt = $pdo->prepare($sql);
+$result = $stmt->execute([$nome, $email, $telefone, $endereco, $cor, $aroma, $data_entrega, $usuario_email]);
+
+if ($result) {
+    // Envia email de confirmação (para todos)
+    $assunto = "Confirmação da sua encomenda na Loja de Velas";
+    $mensagem = "Olá $nome,\n\nSua encomenda foi recebida com sucesso!\nCor: $cor\nAroma: $aroma\nData de Entrega: $data_entrega\n\nObrigado!";
+    mail($email, $assunto, $mensagem, "From: no-reply@lojadavelas.com");
+
+    echo json_encode(['status' => 'sucesso', 'mensagem' => 'Personalização enviada com sucesso!']);
 } else {
     echo json_encode(['status' => 'erro', 'mensagem' => 'Erro ao salvar a personalização.']);
 }
 
-$stmt->close();
-$conn->close();

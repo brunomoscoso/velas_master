@@ -1,15 +1,14 @@
 // 🔁 Carrega os cards dos produtos
 function carregarColecao() {
-  const linkColecao = document.getElementById('link-colecao');
+  const linksColecao = document.querySelectorAll('.link-colecao');
 
-  if (linkColecao) {
-    linkColecao.addEventListener('click', function (e) {
+  linksColecao.forEach(link => {
+    link.addEventListener('click', function (e) {
       e.preventDefault();
 
       fetch('http://localhost/velas_master/actions/cards_colecao.php')
         .then(response => response.text())
         .then(html => {
-          // Substitui o conteúdo da área com os cards
           document.getElementById('area-produtos').innerHTML = html;
         })
         .catch(error => {
@@ -17,7 +16,7 @@ function carregarColecao() {
           console.error('Erro:', error);
         });
     });
-  }
+  });
 }
 
 
@@ -49,7 +48,7 @@ function carregarVelas() {
 }
 
 // 👤 Área de login
-function configurarLogin() {
+function carregarTelaLogin() {
   const linkLogin = document.getElementById('icon-login');
 
   if (!linkLogin) return;
@@ -195,12 +194,11 @@ function configurarFormularioPersonalizacao() {
 }
 
 function configurarLinkPersonalizacao() {
-  const link = document.getElementById('link-personalizacao');
+  const linkPersonalizacao = document.querySelectorAll('.link-personalizacao');
 
-  if (!link) return;
-
-  link.addEventListener('click', function (e) {
-    e.preventDefault();
+  linkPersonalizacao.forEach(link => {
+    link.addEventListener('click', function (e) {
+      e.preventDefault();
 
     fetch('http://localhost/velas_master/pages/personalizacao.php')
       .then(response => response.text())
@@ -215,6 +213,7 @@ function configurarLinkPersonalizacao() {
       .catch(error => {
         console.error('Erro ao carregar personalização:', error);
       });
+    });
   });
 }
 
@@ -361,12 +360,135 @@ function removerDoCarrinho(produto_id) {
   });
 }
 
+function configurarLinkQuemSomos() {
+  const links = document.querySelectorAll('.link-somos');
+
+  links.forEach(link => {
+    link.addEventListener('click', function (e) {
+      e.preventDefault();
+
+      fetch('http://localhost/velas_master/pages/quem_somos.php')
+        .then(res => res.text())
+        .then(html => {
+          document.getElementById('area-login').innerHTML = html;
+          document.getElementById('area-venda-produtos').style.display = 'none';
+
+          // Ativa os botões de voltar
+          setTimeout(() => {
+            const botoesVoltar = document.querySelectorAll('.btn-voltar-produtos');
+            botoesVoltar.forEach(botao => {
+              botao.addEventListener('click', function () {
+                document.getElementById('area-login').innerHTML = '';
+                document.getElementById('area-venda-produtos').style.display = 'block';
+                carregarVelas();
+                carregarQuantidadeVelas();
+              });
+            });
+          }, 100);
+        })
+        .catch(error => {
+          console.error('Erro ao carregar Quem Somos:', error);
+        });
+    });
+  });
+}
+
+function configurarLinkGrupoMoscoso() {
+  const links = document.querySelectorAll('.link-grupo');
+
+  links.forEach(link => {
+    link.addEventListener('click', function (e) {
+      e.preventDefault();
+
+      fetch('http://localhost/velas_master/pages/grupo.php')
+        .then(res => res.text())
+        .then(html => {
+          document.getElementById('area-login').innerHTML = html;
+          document.getElementById('area-venda-produtos').style.display = 'none';
+
+          setTimeout(() => {
+            const botoesVoltar = document.querySelectorAll('.btn-voltar-produtos');
+            botoesVoltar.forEach(botao => {
+              botao.addEventListener('click', function () {
+                document.getElementById('area-login').innerHTML = '';
+                document.getElementById('area-venda-produtos').style.display = 'block';
+                carregarVelas();
+                carregarQuantidadeVelas();
+              });
+            });
+          }, 100);
+        })
+        .catch(error => {
+          console.error('Erro ao carregar Grupo Moscoso:', error);
+        });
+    });
+  });
+}
+function configurarLogin() {
+  const formLogin = document.getElementById('form-login');
+  if (!formLogin) return;
+
+  formLogin.addEventListener('submit', function (e) {
+    e.preventDefault();
+
+    const formData = new FormData(formLogin);
+
+    fetch('http://localhost/velas_master/actions/validar_login.php', {
+      method: 'POST',
+      body: formData
+    })
+      .then(res => res.json())
+      .then(data => {
+        if (data.status === 'sucesso') {
+          fetch('http://localhost/velas_master/pages/area_do_usuario.php')
+            .then(res => res.text())
+            .then(html => {
+              document.getElementById('area-login').innerHTML = html;
+              document.getElementById('area-venda-produtos').style.display = 'none';
+            });
+        } else {
+          alert(data.mensagem); // ou mostre na tela com div#mensagem-login
+        }
+      })
+      .catch(error => {
+        console.error('Erro ao processar login:', error);
+      });
+  });
+}
+
+function configurarLinkAreaUsuario() {
+  const links = document.querySelectorAll('.link-area-usuario');
+
+  links.forEach(link => {
+    link.addEventListener('click', function (e) {
+      e.preventDefault();
+
+      fetch('http://localhost/velas_master/pages/area_do_usuario.php')
+        .then(res => res.json())
+        .then(data => {
+          if (data.status === 'ok') {
+            document.getElementById('area-login').innerHTML = data.html;
+            document.getElementById('area-venda-produtos').style.display = 'none';
+          } else if (data.status === 'nao_autenticado') {
+            alert('Você precisa estar logado para acessar sua área.');
+          }
+        })
+        .catch(error => {
+          console.error('Erro ao carregar área do usuário:', error);
+        });
+    });
+  });
+}
+
+
+
+
 // 🚀 Quando o DOM estiver pronto, chama todas as funções
 document.addEventListener('DOMContentLoaded', function () {
   carregarQuantidadeVelas();
   carregarColecao();
   carregarVelas();
-  configurarLogin();
+  carregarTelaLogin();
   configurarFavoritos();
   configurarFormularioPersonalizacao();
   configurarLinkPersonalizacao();
@@ -376,5 +498,9 @@ document.addEventListener('DOMContentLoaded', function () {
   atualizarContadorCarrinho();
   configurarLinksCarrinho()
   configurarBotaoVoltarCadastro();
+  configurarLinkQuemSomos();
+  configurarLinkGrupoMoscoso();
+  configurarLogin();
+  configurarLinkAreaUsuario();
 });
 
